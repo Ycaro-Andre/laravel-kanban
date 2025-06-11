@@ -16,11 +16,11 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('kanban')" :active="request()->routeIs('kanban')">
-                        {{ __('Kanban') }}
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('kanban.index')" :active="request()->routeIs('kanban.index')">
+                        {{ __('Kanban Board') }}
                     </x-nav-link>
-                </div> --}}
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
