@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS kanban_testing;
+GRANT ALL PRIVILEGES ON kanban_testing.* TO 'laravel'@'%';
+FLUSH PRIVILEGES;

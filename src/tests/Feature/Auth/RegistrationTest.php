@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -28,5 +29,25 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
+    }
+
+    /**
+     * @covers \App\Http\Controllers\Auth\RegisteredUserController::store
+     */
+    public function test_registration_fails_with_already_existing_email()
+    {
+        User::factory()->create([
+            'email' => 'existing@example.com',
+        ]);
+
+        $response = $this->post('/register', [
+            'name' => 'New User',
+            'email' => 'existing@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertSessionHasErrors('email');
+        $this->assertGuest();
     }
 }

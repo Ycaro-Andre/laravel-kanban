@@ -47,13 +47,16 @@ composer install
 
 ```bash
 cp .env.example .env
+cp .env.testing.example .env.testing
 php artisan key:generate
+php artisan key:generate --env=testing
 ```
 
 ### 5. Run database migrations
 
 ```bash
 php artisan migrate
+php artisan migrate --env=testing
 ```
 
 ### (Optional) Compile frontend assets
