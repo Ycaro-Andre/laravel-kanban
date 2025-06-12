@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Board;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BoardController extends Controller
 {
