@@ -49,6 +49,8 @@ Route::middleware('auth')
     ->name('boards.')
     ->group(function () {
         Route::post('/store', [BoardController::class, 'store'])->name('store');
+        Route::put('/{board}', [BoardController::class, 'update'])->name('update');
+        Route::delete('/{board}', [BoardController::class, 'destroy'])->name('delete');
 });
 
 require __DIR__.'/auth.php';

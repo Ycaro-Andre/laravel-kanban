@@ -74,16 +74,35 @@ class BoardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Board $board)
     {
-        //
+        try {
+            $board->update([
+                'title' => $request->input('title')
+            ]);
+
+            Log::info('Board updated successfully!',['BoardController::update']);
+            return response()->json(['boards' => $this->boardService->getAuthUserBoards()], 200);
+
+        } catch(Exception $e) {
+            Log::error('Error updating board: '. $e->getMessage() .' - '. $e->getFile() .' - '. $e->getLine(),['BoardController::update']);
+            return response()->json(['message' => "Couldn't update board. Try again later!"], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Board $board)
     {
-        //
+        try {
+            $board->delete();
+            Log::info('Board deleted successfully!',['BoardController::destroy']);
+            return response()->json(['boards' => $this->boardService->getAuthUserBoards()], 200);
+
+        } catch(Exception $e) {
+            Log::error('Error deleting board: '. $e->getMessage() .' - '. $e->getFile() .' - '. $e->getLine(),['BoardController::destroy']);
+            return response()->json(['message' => "Couldn't delete board. Try again later!"], 500);
+        }
     }
 }
