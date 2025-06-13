@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -41,6 +42,13 @@ Route::middleware('auth')
     ->name('kanban.')
     ->group(function () {
         Route::get('/', [KanbanController::class, 'index'])->name('index');
+});
+
+Route::middleware('auth')
+    ->prefix('boards')
+    ->name('boards.')
+    ->group(function () {
+        Route::post('/store', [BoardController::class, 'store'])->name('store');
 });
 
 require __DIR__.'/auth.php';

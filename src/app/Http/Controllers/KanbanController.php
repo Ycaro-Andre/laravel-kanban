@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Board;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Services\BoardService;
 
 class KanbanController extends Controller
 {
+    protected $boardService;
+
+    public function __construct (
+        BoardService $boardService
+    )
+    {
+        $this->boardService = $boardService;        
+    }
+
     public function index()
     {
-        return Inertia::render('Kanban/Index', [
-            'boards' => Board::where('user_id', auth()->user()->id)->with('lists.cards')->get()
+        return inertia('Kanban/Index', [
+            'boards' => $this->boardService->getAuthUserBoards()
         ]);
     }
 }
