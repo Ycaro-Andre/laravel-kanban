@@ -49,19 +49,19 @@
                         >
                             <div v-if="!editingBoardId || editingBoardId !== board.id">
                                 <h3 class="text-lg font-semibold">{{ board.title }}</h3>
+                                <div class="absolute top-2 right-2 hidden group-hover:flex gap-2">
+                                    <i class="fas fa-eye text-gray-500 cursor-pointer" @click="showBoard(board)"></i>
+                                    <i class="fas fa-edit text-blue-600 cursor-pointer" @click="editBoard(board)"></i>
+                                    <i class="fas fa-trash text-red-600 cursor-pointer" @click="deleteBoard(board)"></i>
+                                </div>
                             </div>
                             <div v-else>
-                            <input
-                                v-model="editingTitle"
-                                class="border border-gray-300 rounded px-2 py-1 w-full"
-                                @keyup.enter="updateBoard()"
-                                @blur="cancelEdit"
-                            />
-                            </div>
-                            <div class="absolute top-2 right-2 hidden group-hover:flex gap-2">
-                                <i class="fas fa-eye text-gray-500 cursor-pointer" @click="showBoard(board)"></i>
-                                <i class="fas fa-edit text-blue-600 cursor-pointer" @click="editBoard(board)"></i>
-                                <i class="fas fa-trash text-red-600 cursor-pointer" @click="deleteBoard(board)"></i>
+                                <input
+                                    v-model="editingTitle"
+                                    class="border border-gray-300 rounded px-2 py-1 w-full"
+                                    @keyup.enter="updateBoard()"
+                                    @blur="cancelEdit"
+                                />
                             </div>
                         </div>
                     </div>
