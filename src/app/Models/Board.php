@@ -18,7 +18,7 @@ class Board extends Model
 
     public function lists()
     {
-        return $this->hasMany(KanbanList::class);
+        return $this->hasMany(KanbanList::class)->orderBy('position');
     }
 
     public function user()
