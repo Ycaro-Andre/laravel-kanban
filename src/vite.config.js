@@ -18,11 +18,11 @@ export default defineConfig({
         }),
     ],
     server: {
-        host: true, // ou '0.0.0.0'
+        host: true,
         port: 5173,
         strictPort: true,
         hmr: {
-        host: 'localhost', // ou o IP da máquina host
+        host: 'localhost',
         },
     },
 });
