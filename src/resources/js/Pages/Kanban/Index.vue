@@ -7,6 +7,7 @@
         </template>
 
         <div class="py-12">
+            <LoadingSpinner v-if="loading" />
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <div v-if="creatingNewBoard" class="mb-6">
@@ -75,6 +76,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
 import { route } from 'ziggy-js';
+import LoadingSpinner from '@/Components/LoadingSpinner.vue';
 
 export default {
     build: {
@@ -84,7 +86,8 @@ export default {
     },
     components: {
         AuthenticatedLayout,
-        Head
+        Head,
+        LoadingSpinner
     },
     props: {
         boards: Array,
@@ -95,7 +98,8 @@ export default {
             newBoardTitle: '',
             creatingNewBoard: false,
             editingBoardId: null,
-            editingTitle: ''
+            editingTitle: '',
+            loading: false
         };
     },
     methods: {
@@ -103,8 +107,11 @@ export default {
             const title = this.newBoardTitle.trim();
             if (!title) return alert('Title cannot be null!');
 
+            this.loading = true;
+
             axios.post(route('boards.store'), { title: title })
                 .then(response => {
+                    this.loading = false;
                     this.boardList = response.data.boards;
                     this.creatingNewBoard = false;
                 })
@@ -134,22 +141,29 @@ export default {
             const title = this.editingTitle.trim();
             if (!title) return alert('Title cannot be null!');
 
+            this.loading = true;
+
             axios.put(route('boards.update', this.editingBoardId), { title: title })
                 .then(response => {
+                    this.loading = false;
                     this.boardList = response.data.boards;
                     this.cancelEdit();
                 })
                 .catch(errors => {
                     alert(errors.message)
+                    this.loading = false;
                     this.cancelEdit();
                 });
         },
         deleteBoard(board) {
+            this.loading = true;
             axios.delete(route('boards.delete', board.id))
                 .then(response => {
+                    this.loading = false;
                     this.boardList = response.data.boards;
                 })
                 .catch(errors => {
+                    this.loading = false;
                     alert(errors.message)
                 });
         }
