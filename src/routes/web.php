@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\KanbanController;
+use App\Http\Controllers\KanbanListController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +53,27 @@ Route::middleware('auth')
         Route::post('/store', [BoardController::class, 'store'])->name('store');
         Route::put('/{board}', [BoardController::class, 'update'])->name('update');
         Route::delete('/{board}', [BoardController::class, 'destroy'])->name('delete');
+        Route::get('/{board}', [BoardController::class, 'show'])->name('show');
+});
+
+Route::middleware('auth')
+    ->prefix('lists')
+    ->name('lists.')
+    ->group(function () {
+        Route::post('/store', [KanbanListController::class, 'store'])->name('store');
+        Route::put('/{kanbanList}', [KanbanListController::class, 'update'])->name('update');
+        Route::post('/change-positions', [KanbanListController::class, 'changePositions'])->name('change-positions');
+        Route::delete('/{kanbanList}', [KanbanListController::class, 'destroy'])->name('delete');
+});
+
+Route::middleware('auth')
+    ->prefix('cards')
+    ->name('cards.')
+    ->group(function () {
+        Route::post('/store', [CardController::class, 'store'])->name('store');
+        Route::post('/change-positions', [CardController::class, 'changePositions'])->name('change-positions');
+        Route::put('/{card}', [CardController::class, 'update'])->name('update');
+        Route::delete('/{card}', [CardController::class, 'destroy'])->name('delete');
 });
 
 require __DIR__.'/auth.php';
