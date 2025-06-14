@@ -34,20 +34,27 @@ cd laravel-kanban
 
 ```bash
 docker-compose up -d --build
+docker compose up -d --build (for Windows)
 ```
 
-### 3. Install PHP dependencies inside the container
+### 3. Install PHP and NPM dependencies inside the container
 
 ```bash
-docker compose exec app bash
+docker-compose exec app bash
+docker compose exec app bash (for Windows)
+
 composer install
+npm install
 ```
 
 ### 4. Set up environment and application key
 
 ```bash
-cp .env.example .env
+cp .env.prod.example .env (For better performance: production env configuration)
+cp .env.example .env (For better debugging: local env configuration)
+
 cp .env.testing.example .env.testing
+
 php artisan key:generate
 php artisan key:generate --env=testing
 ```
@@ -56,12 +63,23 @@ php artisan key:generate --env=testing
 
 ```bash
 php artisan migrate
-php artisan migrate --env=testing
 ```
 
-### (Optional) Compile frontend assets
+### 6. Compile frontend assets
 
 ```bash
-npm install
-npm run build
+npm run build (If you are running with production env)
+npm run dev (If you are running with local env)
+```
+
+### Enjoy the Trello(Experimental Beta Alpha Demo 0.0.1 Version :P)
+
+```bash
+http://localhost:8080
+```
+
+### (Optional) Running tests
+
+```bash
+php artisan test
 ```
