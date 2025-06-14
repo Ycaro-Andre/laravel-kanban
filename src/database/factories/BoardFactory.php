@@ -19,7 +19,6 @@ class BoardFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph,
             'user_id' => User::factory(),
             'created_at' => now(),
             'updated_at' => now(),
