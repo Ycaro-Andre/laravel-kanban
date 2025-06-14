@@ -58,9 +58,13 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Board $board)
     {
-        //
+        $board->load('lists.cards');
+
+        return Inertia::render('Kanban/Board', [
+            'board' => $board,
+        ]);
     }
 
     /**
