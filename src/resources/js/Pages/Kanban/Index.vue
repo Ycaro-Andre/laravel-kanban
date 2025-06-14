@@ -29,7 +29,7 @@
                             @click="createBoard"
                             :disabled="newBoardTitle.trim() === ''"
                         >
-                            + Create Board
+                            Create Board
                         </button>
                     </div>
                     <div v-if="!creatingNewBoard" class="mb-6">
@@ -113,11 +113,11 @@ export default {
                 .then(response => {
                     this.loading = false;
                     this.boardList = response.data.boards;
-                    this.creatingNewBoard = false;
+                    this.cancelCreatingNewBoard();
                 })
                 .catch(errors => {
                     alert(errors.message)
-                    this.creatingNewBoard = false;
+                    this.cancelCreatingNewBoard();
                 });
         },
         creatingNewBoardClick() {
@@ -125,9 +125,10 @@ export default {
         },
         cancelCreatingNewBoard() {
             this.creatingNewBoard = false;
+            this.newBoardTitle = '';
         },
         showBoard(board) {
-            //this.$inertia.visit(route('boards.show', board.id));
+            this.$inertia.visit(route('boards.show', board.id));
         },
         editBoard(board) {
             this.editingBoardId = board.id;
