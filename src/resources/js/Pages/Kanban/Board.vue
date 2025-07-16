@@ -7,6 +7,7 @@
         </template>
 
         <div class="py-12">
+            <!-- Modal -->
             <div v-if="editingCard.id" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div class="bg-white rounded shadow-lg p-6 w-full max-w-md">
                     <h2 class="text-lg font-bold mb-4">Edit Card</h2>
@@ -15,6 +16,16 @@
                         v-model="editingCard.title"
                         class="border border-gray-300 rounded px-3 py-2 w-full mb-4"
                     />
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
+                    <select
+                        v-model="labelsData"
+                        class="border border-gray-300 rounded px-3 py-2 w-full mb-4"
+                        multiple
+                    >
+                        <option v-for="label in labels" :key="label.id" :value="label.id" :selected="editingCard.labels.map(element => element.id).includes(label.id)">
+                            {{ label.title }}
+                        </option>
+                    </select>
 
                     <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                     <textarea
@@ -29,6 +40,7 @@
                     </div>
                 </div>
             </div>
+
             <LoadingSpinner v-if="loading" />
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -169,11 +181,13 @@ export default {
         draggable
     },
     props: {
-        board: Object
+        board: Object,
+        labels: Object
     },
     data() {
         return {
             boardData: {...this.board},
+            labelsData: [],
             newListTitle: '',
             newCardTitle: '',
             creatingNewList: false,
@@ -188,9 +202,12 @@ export default {
         };
     },
     watch: {
-    board(newVal) {
-        this.boardData = {...newVal};
-    }
+        board(newVal) {
+            this.boardData = {...newVal};
+        },
+        labels(newVal) {
+            this.labelsData = {...newVal};
+        }
     },
     created() {
         this.updateCardPositionsDebounce = debounce(this.updateCardPositions, 3000);
@@ -240,7 +257,7 @@ export default {
             this.boardData.lists[listIndex].title = trimmedTitle;
             this.cancelListEdit();
 
-            axios.put(route('lists.update', id), { 
+            axios.put(route('lists.update', id), {
                 title: trimmedTitle,
             })
             .catch(errors => {
@@ -289,8 +306,12 @@ export default {
             this.editingCard.id = card.id;
             this.editingCard.title = card.title;
             this.editingCard.description = card.description;
+            this.editingCard.labels = card.labels;
             this.editingCard.cardIndex = cardIndex
             this.editingCard.listIndex = listIndex
+
+            console.log(this.editingCard.labels);
+            console.log(this.labels);
         },
         cancelCardEdit() {
             this.editingCard = {}
@@ -320,7 +341,7 @@ export default {
                 });
         },
         updateCard() {
-            const { listIndex, cardIndex, title, description, id } = this.editingCard
+            const { listIndex, cardIndex, title, description, labels, id } = this.editingCard
 
             const trimmedTitle = title.trim();
             const trimmedDescription = description.trim();
@@ -330,11 +351,14 @@ export default {
 
             this.boardData.lists[listIndex].cards[cardIndex].title = trimmedTitle;
             this.boardData.lists[listIndex].cards[cardIndex].description = trimmedDescription;
+            this.boardData.lists[listIndex].cards[cardIndex].labels = this.labelsData;
+
             this.cancelCardEdit();
 
-            axios.put(route('cards.update', id), { 
+            axios.put(route('cards.update', id), {
                 title: trimmedTitle,
-                description: trimmedDescription
+                description: trimmedDescription,
+                labels: this.labelsData
             })
             .catch(errors => {
                 alert(errors.message)

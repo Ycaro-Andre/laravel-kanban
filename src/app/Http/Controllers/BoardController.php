@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Board;
+use App\Models\Label;
 use App\Services\BoardService;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class BoardController extends Controller
         BoardService $boardService
     )
     {
-        $this->boardService = $boardService;        
+        $this->boardService = $boardService;
     }
     /**
      * Display a listing of the resource.
@@ -60,10 +61,11 @@ class BoardController extends Controller
      */
     public function show(Board $board)
     {
-        $board->load('lists.cards');
+        $board->load('lists.cards.labels');
 
         return Inertia::render('Kanban/Board', [
             'board' => $board,
+            'labels' => Label::all()
         ]);
     }
 

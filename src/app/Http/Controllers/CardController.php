@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\CardLabel;
 use App\Models\KanbanList;
 use Exception;
 use Illuminate\Http\Request;
@@ -37,8 +38,8 @@ class CardController extends Controller
             $card = Card::create([
                 'title' => $request->input('title'),
                 'kanban_list_id' => $list->id,
-                'position' => $list->cards()->max('position') !== null 
-                    ? $list->cards()->max('position') + 1 
+                'position' => $list->cards()->max('position') !== null
+                    ? $list->cards()->max('position') + 1
                     : 0
             ]);
 
@@ -80,6 +81,16 @@ class CardController extends Controller
                 'title' => $request->input('title'),
                 'description' => $request->input('description')
             ]);
+
+            CardLabel::where('card_id', $card->id)->delete();
+
+            foreach ($request->input('labels') as $label) {
+                CardLabel::updateOrCreate([
+                    'card_id' => $card->id,
+                    'label_id' => $label
+                ]);
+            }
+            $card->save();
 
             Log::info('Card updated successfully!',['CardController::update']);
             return response()->json(['card' => $card], 200);
@@ -151,7 +162,7 @@ class CardController extends Controller
                 ->decrement('position');
 
             $card->delete();
-            
+
             DB::commit();
             Log::info('Card deleted successfully!',['CardController::destroy']);
             return response()->json(['status' => 'success']);

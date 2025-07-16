@@ -22,4 +22,8 @@ class Card extends Model
         return $this->belongsTo(KanbanList::class);
     }
 
+    public function labels()
+    {
+        return $this->hasManyThrough(Label::class, CardLabel::class, 'card_id', 'id', 'id', 'label_id');
+    }
 }
